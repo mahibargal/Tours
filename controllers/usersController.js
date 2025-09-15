@@ -1,5 +1,6 @@
 const User = require("../models.js/userModel")
-const catchAsync = require("../utils/catchAsync")
+const catchAsync = require("../utils/catchAsync");
+const factory = require('./handlerFactory');
 
 
 
@@ -29,9 +30,7 @@ const users = await User.find();
     }    
     })
 })
-exports.getUserWithId = (req, res) => {
-    res.status(500).json({ message: 'route not defined yet!' })
-}
+exports.getUserWithId = factory.getOne(User);
 exports.updateUserWIthId = (req, res) => {
     res.status(500).json({ message: 'route not defined yet!' })
 }
@@ -78,3 +77,8 @@ exports.deleteUser = catchAsync(async(req,res,next)=>{
     })
 
 })
+
+exports.getMe = (req,res,next)=>{
+    req.params.id = req.user.id;
+    next();
+}

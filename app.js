@@ -10,6 +10,7 @@ const app = express();
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/apiError');
+const reviewRouter = require('./routes/reviewRoutes');
 
 
 //middlewares
@@ -55,6 +56,7 @@ app.use((req,res,next)=>{
 //ROUTES
 app.use('/api/tours/v1',tourRouter);
 app.use('/api/users/v1',userRouter);
+app.use('/api/reviews/v1',reviewRouter)
 
 
 app.all("*",(req,res,next)=>{

@@ -4,19 +4,20 @@ const authController = require('../controllers/authController')
 
 const userRouter = express.Router();
 
-
 userRouter.post('/signup',authController.signup)
 userRouter.post('/login',authController.login)
 userRouter.post('/forgotPassword',authController.forgotPassword)
-userRouter.patch('/resetPassword/:token',authController.resetPassword)
-userRouter.patch('/updatePassword',authController.protect,authController.updatePassword)
+userRouter.patch('/resetPassword/:token',authController.resetPassword);
 
+userRouter.use(authController.protect);//running for all below after this middleware
 
+userRouter.patch('/updatePassword',authController.updatePassword)
 
-userRouter.patch('/updateUser',authController.protect,userController.updateUser)
-userRouter.delete('/deleteUser',authController.protect,userController.deleteUser)
+userRouter.get('/me',userController.getMe,userController.getUserWithId)
+userRouter.patch('/updateUser',userController.updateUser)
+userRouter.delete('/deleteUser',userController.deleteUser)
 
-// userRouter.route('/').get(userController.getAllUsers).post(userController.addUser);
+userRouter.use(authController.restrictTo('admin','user'));
 
 userRouter.get('/', userController.getAllUsers);
 userRouter.get('/:id', userController.getUserWithId);

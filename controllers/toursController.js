@@ -3,9 +3,11 @@ const fs = require('fs');
 const AppError = require('../utils/apiError');
 const Tour = require('./../models.js/tourModel');
 const APiFeatures = require('./../utils/ApiFeature');
-const catchAsync = require('./../utils/catchAsync')
+const catchAsync = require('./../utils/catchAsync');
+const factory = require('./handlerFactory');
 
-exports.getAlltours = async (req, res, next) => {
+exports.getAlltours = factory.getAll(Tour)
+exports.getAlltour = async (req, res, next) => {
     try {
         //BUILD QUERY
         // const reqObj = { ...req.query };
@@ -69,71 +71,76 @@ exports.getAlltours = async (req, res, next) => {
     }
 }
 
+exports.getTourWithId = factory.getOne(Tour,{path:'reviews'});
+// exports.getTourWithId = catchAsync(async (req, res, next) => {
 
-exports.getTourWithId = catchAsync(async (req, res, next) => {
+//     // try {
+//     const tour = await Tour.findById(req.params.id).populate('reviews');
+//     // .populate({
+//     //     path:'guides',
+//     //     select:'-__v -passwordChangedAt'
+//     // });
+//     // Tour.findOne({_id:req.params.id})
+//     if (!tour) {
+//         return next(new AppError("No tour found with that id", 404));
+//     }
+//     res.status(200).json({ message: 'success', tour: tour })
+//     // } catch (err) {
+//     //     res.status(400).json({ message: err })
+//     // }
+// })
 
-    // try {
-    const tour = await Tour.findById(req.params.id)
-    // .populate({
-    //     path:'guides',
-    //     select:'-__v -passwordChangedAt'
-    // });
-    // Tour.findOne({_id:req.params.id})
-    if (!tour) {
-        return next(new AppError("No tour found with that id", 404));
-    }
-    res.status(200).json({ message: 'success', tour: tour })
-    // } catch (err) {
-    //     res.status(400).json({ message: err })
-    // }
-})
+exports.deleteTour =  factory.deleteOne(Tour)
 
-exports.deleteTour = async (req, res, next) => {    
+// exports.deleteTour = async (req, res, next) => {    
 
-    try {
+//     try {
 
-        const tour = await Tour.findByIdAndDelete(req.params.id);
-        if (!tour) {
-            return next(new AppError("No tour found with that id", 404));
-        }
-        res.status(204).json({ message: 'success', tour })
-    } catch (err) {
-        next(err)
-        // res.status(400).json({ message: err })
-    }
-}
+//         const tour = await Tour.findByIdAndDelete(req.params.id);
+//         if (!tour) {
+//             return next(new AppError("No tour found with that id", 404));
+//         }
+//         res.status(204).json({ message: 'success', tour })
+//     } catch (err) {
+//         next(err)
+//     }
+// }
+
 //patch request
-exports.updateTourWIthId = async (req, res, next) => {
-    try {
-        const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true
-        });
+exports.updateTourWIthId = factory.updateOne(Tour)
+// exports.updateTourWIthId = async (req, res, next) => {
+//     try {
+//         const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//             new: true,
+//             runValidators: true
+//         });
 
-        if (!tour) {
-            return next(new AppError("No tour found with that id", 404));
-        }
-        res.status(200).json({ message: 'success', tour })
-    } catch (err) {
-        next(err)
-        // res.status(400).json({ message: err })
-    }
-}
+//         if (!tour) {
+//             return next(new AppError("No tour found with that id", 404));
+//         }
+//         res.status(200).json({ message: 'success', tour })
+//     } catch (err) {
+//         next(err)
+//         // res.status(400).json({ message: err })
+//     }
+// }
 
-exports.addTour = catchAsync(async (req, res, next) => {
-    try {
-        console.log(req.body);
-        // const tour = new Tour(req.body);
-        // const data = await tour.save();
-        const newTour = await Tour.create(req.body);
 
-        res.status(200).json({ message: 'success', tour: newTour })
-    } catch (err) {
-        next(err)
-        // res.status(400).json({ message: err });
+exports.addTour = factory.createOne(Tour);
+// exports.addTour = catchAsync(async (req, res, next) => {
+//     try {
+//         console.log(req.body);
+//         // const tour = new Tour(req.body);
+//         // const data = await tour.save();
+//         const newTour = await Tour.create(req.body);
 
-    }
-})
+//         res.status(200).json({ message: 'success', tour: newTour })
+//     } catch (err) {
+//         next(err)
+//         // res.status(400).json({ message: err });
+
+//     }
+// })
 
 exports.aliasTop5CheapTours = (req, res, next) => {
 

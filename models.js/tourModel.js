@@ -117,7 +117,7 @@ const toursSchema = new mongoose.Schema(
             type:mongoose.Schema.ObjectId,
             ref:'User'
         }
-    ]
+    ],
 
 
 },
@@ -129,6 +129,12 @@ const toursSchema = new mongoose.Schema(
 
 toursSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7; //will get in get query but we cannot query like durationWeeks ==1
+})
+
+toursSchema.virtual('reviews',{
+    ref:'Review',
+    foreignField:'tour',
+    localField:'_id'
 })
 
 //DOCUMENT MIDDLEWARE: runs befor .save() & .create() (not on saveMany)
@@ -164,6 +170,7 @@ toursSchema.pre(/^find/, function (next) {
 });
     next();
 })
+
 toursSchema.post(/^find/, function (doc, next) {
 
     console.log(`Query takes ${(new Date - this.start)} miliseconds`);
