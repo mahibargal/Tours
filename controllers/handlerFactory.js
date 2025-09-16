@@ -51,7 +51,7 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
         .sortQuery()
         .selectFields()
         .pagination();
-    const doc = await features.query;
+    const doc = await features.query;   //await features.query.explain();
     res.status(200).json({ message: 'Success', results: doc.length, data: { data: doc }, })
 
 })
