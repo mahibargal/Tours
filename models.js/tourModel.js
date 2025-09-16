@@ -126,6 +126,10 @@ const toursSchema = new mongoose.Schema(
         toObject: { virtuals: true }
     }
 )
+//indexing
+// toursSchema.index({price:1});
+toursSchema.index({price:1,ratingsAverage:-1}); //compound index
+toursSchema.index({slug:1})
 
 toursSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7; //will get in get query but we cannot query like durationWeeks ==1
